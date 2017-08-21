@@ -14,3 +14,13 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('tickets', 'TicketsController@index')->name('tickets.index');
+    Route::post('reservation', 'ReservationController@store')->name('reservation.store');
+    Route::post('lite-reservation', 'LiteReservationController@store')->name('lite-reservation.store');
+});
