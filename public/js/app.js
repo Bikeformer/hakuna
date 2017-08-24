@@ -1,4 +1,4 @@
-Pusher.logToConsole = true;
+Pusher.logToConsole = false;
 
 var pusher = new Pusher('f5ba963d113eaa683023', {
     encrypted: true
@@ -29,7 +29,7 @@ $(document).on("click", '.seat', function() {
     var line_number = $(this).data('line');
     var sector_id = $(this).data('sector');
 
-    var btn_text = 'Забронировать место' + seat_number + ', ряд: ' + line_number + ', сектор: ' + sector_id;
+    var btn_text = 'Предварительная бронь места ' + seat_number + ', ряд: ' + line_number + ', сектор: ' + sector_id + ', нажмите что бы купить';
     $('#btn-buy').val(btn_text).data('id', seat_id);
 
     var data = {
@@ -46,7 +46,6 @@ $(document).on("click", '.seat', function() {
         }
     });
 
-
     localStorage["seat_id"] = seat_id;
 });
 
@@ -58,6 +57,8 @@ function workForClass(e) {
 }
 
 $("#btn-buy").on( "click", function() {
+    if (!confirm("Сделать заказ?")) return false;
+
     var seat_id = $(this).data('id');
     if(!seat_id) return false;
 
@@ -69,6 +70,19 @@ $("#btn-buy").on( "click", function() {
         type: "POST",
         url: "reservation",
         data: data,
+        success: function( data ) {
+            alert(data.message);
+        }
+    });
+});
+
+$("#delete-reservation").on( "click", function() {
+    if (!confirm("Удалить?")) return false;
+    $('#user-reservation').remove();
+
+    $.ajax({
+        type: "DELETE",
+        url: "reservation",
         success: function( data ) {
             alert(data.message);
         }

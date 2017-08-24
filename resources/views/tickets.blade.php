@@ -22,6 +22,10 @@
 
             @include('include.ticket_info')
 
+            @if($reservation)
+                @include('include.user_reservation')
+            @endif
+
             @foreach($sectors as $sector)
                 <div class="col-md-10 col-md-offset-1">
                 <div class="panel panel-default">
@@ -40,8 +44,8 @@
                                     <tr>
                                         <td class="info"><b>{{ $seat->line_number }}</b></td>
                                 @endif
-                                        <td @if($seat->reservation) class="danger" @elseif($seat->liteReservation) class="warning" @else class="success seat" @endif
-                                        data-id="{{ $seat->id }}" data-line="{{ $seat->line_number }}" data-sector="{{ $sector->id }}">
+                                        <td class="@if($seat->reservation['user_id'] === Auth::user()->id) info @elseif($seat->reservation) danger @elseif($seat->liteReservation) warning @else success seat @endif"
+                                            data-id="{{ $seat->id }}" data-line="{{ $seat->line_number }}" data-sector="{{ $sector->id }}">
                                             {{ $seat->seat_number }}
                                         </td>
                                 @if($seat->seat_number === env('COUNT_SEATS'))
