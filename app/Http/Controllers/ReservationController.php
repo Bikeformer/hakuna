@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ReservationRequest;
 use App\Reservation;
+use Auth;
+
 
 class ReservationController extends Controller
 {
@@ -31,6 +33,8 @@ class ReservationController extends Controller
         'Выбранное место успешно забронировано',
         'Вы уже забронировали место',
         'Выбранное место уже забронировано или находится в процессе бронирования',
+        'Удалено',
+        'Ошибка',
     ];
 
     /**
@@ -52,6 +56,22 @@ class ReservationController extends Controller
         $this->reservation->save();
 
         return response()->json(['message' => $this->responseMessage[0]]);
+    }
+
+    /**
+     * Delete reservation
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy()
+    {
+        $user_id = Auth::user()->id;
+        $reservation = $this->reservation->where('user_id', $user_id)->first();
+        if($reservation) $reservation->delete();
+
+        return $reservation ?
+            response()->json(['message' => $this->responseMessage[3]]):
+            response()->json(['message' => $this->responseMessage[4]]);
     }
 
     /**

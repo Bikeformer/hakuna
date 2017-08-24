@@ -26,4 +26,14 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * Get user reservation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function reservation()
+    {
+        return $this->hasOne(Reservation::class);
+    }
 }

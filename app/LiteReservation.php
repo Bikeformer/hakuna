@@ -16,7 +16,7 @@ class LiteReservation extends Model
     protected $fillable = [
         'seat_id',
         'user_id',
-        'end_time'
+        'end_time',
     ];
 
     /**
@@ -29,15 +29,14 @@ class LiteReservation extends Model
      */
     protected $dates = ['end_date', 'deleted_at'];
 
-
     public static function boot()
     {
-        static::deleted(function ($instance) {
-            event(new ReservationEvent($instance->seat_id, 2));
-        });
-
         static::created(function ($instance) {
             event(new ReservationEvent($instance->seat_id, 1));
+        });
+
+        static::deleted(function ($instance) {
+            event(new ReservationEvent($instance->seat_id, 2));
         });
 
         parent::boot();

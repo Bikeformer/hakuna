@@ -14,6 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\SendTicketEvent::class,
+        Commands\ClearingLiteReservation::class,
+        Commands\CachingTickets::class,
     ];
 
     /**
@@ -24,8 +26,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->command('clearing-lite-reservation')->dailyAt('03:00');
+        $schedule->command('caching-tickets')->everyFiveMinutes();
     }
 
     /**

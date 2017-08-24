@@ -22,5 +22,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['middleware' => 'auth'], function () {
     Route::get('tickets', 'TicketsController@index')->name('tickets.index');
     Route::post('reservation', 'ReservationController@store')->name('reservation.store');
+    Route::delete('reservation', 'ReservationController@destroy')->name('reservation.destroy');
     Route::post('lite-reservation', 'LiteReservationController@store')->name('lite-reservation.store');
 });
+
+/* DEV */
+Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
