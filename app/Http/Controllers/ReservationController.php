@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ReservationRequest;
+use App\LiteReservation;
 use App\Reservation;
 use Auth;
 
@@ -15,6 +16,13 @@ class ReservationController extends Controller
      * @var Reservation
      */
     public $reservation;
+    public $liteReservation;
+
+    const MESSAGE_OK = 'Выбранное место успешно забронировано';
+    const MESSAGE_ERROR = 'Ошибка';
+    const MESSAGE_DELETE = 'Удалено';
+    const MESSAGE_REPEAT = 'Вы уже забронировали место';
+    const MESSAGE_RESERVATION_ERROR = 'Выбранное место уже забронировано или находится в процессе бронирования';
 
     /**
      * ReservationController constructor.
@@ -22,20 +30,8 @@ class ReservationController extends Controller
     public function __construct()
     {
         $this->reservation = new Reservation;
+        $this->liteReservation = new LiteReservation;
     }
-
-    /**
-     * Response Message
-     *
-     * @var array
-     */
-    private $responseMessage = [
-        'Выбранное место успешно забронировано',
-        'Вы уже забронировали место',
-        'Выбранное место уже забронировано или находится в процессе бронирования',
-        'Удалено',
-        'Ошибка',
-    ];
 
     /**
      * Store Reservation seat
@@ -54,8 +50,9 @@ class ReservationController extends Controller
         $this->reservation->user_id = $userId;
         $this->reservation->seat_id = $request->seat_id;
         $this->reservation->save();
+        $this->liteReservation->where('user_id', $userId)->delete();
 
-        return response()->json(['message' => $this->responseMessage[0]]);
+        return response()->json(['message' => self::MESSAGE_OK]);
     }
 
     /**
@@ -70,8 +67,8 @@ class ReservationController extends Controller
         if($reservation) $reservation->delete();
 
         return $reservation ?
-            response()->json(['message' => $this->responseMessage[3]]):
-            response()->json(['message' => $this->responseMessage[4]]);
+            response()->json(['message' => self::MESSAGE_DELETE]):
+            response()->json(['message' => self::MESSAGE_ERROR]);
     }
 
     /**
@@ -89,9 +86,9 @@ class ReservationController extends Controller
 
         if(!empty($reservation)) {
             return $reservation->user_id === $userId ?
-                $this->responseMessage[1]:
-                $this->responseMessage[2];
-        }else{
+                self::MESSAGE_REPEAT :
+                self::MESSAGE_RESERVATION_ERROR;
+        } else {
             return true;
         }
     }

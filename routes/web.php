@@ -25,6 +25,3 @@ Route::group(['middleware' => 'auth'], function () {
     Route::delete('reservation', 'ReservationController@destroy')->name('reservation.destroy');
     Route::post('lite-reservation', 'LiteReservationController@store')->name('lite-reservation.store');
 });
-
-/* DEV */
-Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');

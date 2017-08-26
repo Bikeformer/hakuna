@@ -2,26 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Sector;
 use Illuminate\Http\Request;
 use Cache;
+use Artisan;
 
 class TicketsController extends Controller
 {
-    /**
-     * Sector::class
-     *
-     * @var Sector
-     */
-    public $sector;
-
-    /**
-     * TicketsController constructor.
-     */
-    public function __construct()
-    {
-        $this->sector = new Sector;
-    }
 
     /**
      * Show Tickets page
@@ -32,6 +18,11 @@ class TicketsController extends Controller
     public function index(Request $request)
     {
         $sectors = Cache::get('sectors');
+
+        if(!$sectors) {
+            Artisan::call('caching-tickets');
+            $sectors = Cache::get('sectors');
+        }
 
         $reservation = $request->user()
             ->reservation()
