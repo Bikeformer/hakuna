@@ -14,7 +14,7 @@ class LiteReservationTableSeeder extends Seeder
         DB::table('lite_reservations')->insert([
             'seat_id' => 1,
             'user_id' => 1,
-            'end_date' => \Carbon\Carbon::now()->addMinutes(60),
+            'end_date' => \Carbon\Carbon::now()->addMinutes(env('RESERVATION_MINUTES')),
         ]);
 
     }
