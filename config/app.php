@@ -180,8 +180,7 @@ return [
         /*
          * DEV
          */
-        Barryvdh\Debugbar\ServiceProvider::class,
-        Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
+//        Barryvdh\Debugbar\ServiceProvider::class,
     ],
 
     /*
