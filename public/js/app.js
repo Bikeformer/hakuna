@@ -15,6 +15,8 @@ channel.bind('reservation', function(data) {
         class_name = 'success seat';
     }
 
+    console.log(data.seatId  +'  |  '+ class_name + '  |  '+ data.reservationType);
+
     $('[data-id="' + data.seatId + '"]').removeClass().addClass(class_name);
 
 });
